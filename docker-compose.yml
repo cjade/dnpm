@@ -1,0 +1,50 @@
+version: "2"
+services:
+  php71:
+    build:
+      context: .
+      args:
+        PHP_VERSION: 7.1
+    container_name: php71
+    restart: always
+    working_dir: /usr/websites
+    volumes:
+    - ${WEB_ROOT}:/usr/websites
+    - ${PHP_CONFIG}/php.ini:/usr/local/etc/php/php.ini
+    - ${PHP_CONFIG}/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - ${PHP_CONFIG}/php-fpm.d:/usr/local/etc/php-fpm.d
+    - ${LOG}/php/error.log:/usr/local/php/log/error.log
+    environment:
+      TZ: "${TZ}"
+    ports:
+    - 9000:9000
+    networks:
+      - static-network
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    volumes:
+      - ${NGINX_CONFIG}/nginx.conf:/etc/nginx/nginx.conf
+      - ${NGINX_CONFIG}/conf.d:/etc/nginx/conf.d
+      - ${LOG}/nginx:/var/log/nginx/
+      - ${WEB_ROOT}:/usr/websites
+    networks:
+      - static-network
+
+    ports:
+      - "80:80"
+      - "433:433"
+    environment:
+      TZ: "${TZ}"
+
+
+
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+

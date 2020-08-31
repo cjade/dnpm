@@ -1,6 +1,9 @@
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-fpm
 
+# 替换源来加速
+COPY ./resources/sources.list /etc/apt/
+
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \

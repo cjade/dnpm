@@ -39,6 +39,30 @@ services:
     environment:
       TZ: "${TZ}"
 
+  db:
+    #构建mysql镜像
+    image: ${MYSQL_IMAGE}
+    container_name: db-mysql
+    environment:
+      TZ: "${TZ}"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ${MYSQL_CONFIG}:/etc/mysql     # mysql 配置
+      - ${MYSQL_LOG}:/var/log/mysql    # mysql 日志
+      - ${MYSQL_DATA}:/var/lib/mysql   # mysql 数据
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+      --max_connections=1000
+    networks:
+      - static-network
 
 
 

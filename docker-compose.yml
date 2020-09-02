@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   php71:
     build:
@@ -32,7 +32,6 @@ services:
       - ${WEB_ROOT}:/usr/websites
     networks:
       - static-network
-
     ports:
       - "80:80"
       - "433:433"

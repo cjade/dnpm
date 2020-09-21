@@ -9,15 +9,18 @@ services:
     restart: always
     working_dir: /usr/websites
     volumes:
-    - ${WEB_ROOT}:/usr/websites
-    - ${PHP_CONFIG}/php.ini:/usr/local/etc/php/php.ini
-    - ${PHP_CONFIG}/php-fpm.conf:/usr/local/etc/php-fpm.conf
-    - ${PHP_CONFIG}/php-fpm.d:/usr/local/etc/php-fpm.d
-    - ${LOG}/php:/usr/local/php/log
+      - ${WEB_ROOT}:/usr/websites
+      - ${PHP_CONFIG}/php.ini:/usr/local/etc/php/php.ini
+      - ${PHP_CONFIG}/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${PHP_CONFIG}/php-fpm.d:/usr/local/etc/php-fpm.d
+      - ${LOG}/php:/usr/local/php/log
     environment:
       TZ: "${TZ}"
     ports:
-    - 9000:9000
+      - 9000:9000
+      - 9501:9501
+      - 9502:9502
+      - 9503:9503
     networks:
       - static-network
 

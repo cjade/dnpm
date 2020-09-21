@@ -10,25 +10,26 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/ \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends apt-utils \
-    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip\
+    && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip openssl libssl-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/  --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install pdo_mysql zip gd opcache bcmath pcntl sockets mysqli
 
 WORKDIR /tmp
 
 ADD ./resources/redis-5.1.1.tgz .
-#ADD ./resources/Python-3.8.0.tgz .
-#ADD ./resources/node-v12.13.0-linux-x64.tar.xz .
-COPY ./resources/swoole-src-4.4.12.zip .
+COPY ./resources/swoole-src-4.5.4.tar.gz .
 
 # 安装 redis 扩展
 RUN mkdir -p /usr/src/php/ext \
     && mv /tmp/redis-5.1.1 /usr/src/php/ext/redis \
     && docker-php-ext-install redis
 
-# 安装 swoole
-RUN cd /tmp && unzip swoole-src-4.4.12.zip \
-    && cd swoole-src-4.4.12 && phpize && ./configure \
+# 安装 swoole 
+ RUN cd /tmp && tar -xvf swoole-src-4.5.4.tar.gz \
+    # && mv swoole-src* swoole-src && cd swoole-src \
+    && cd swoole-src-4.5.4 \
+    && phpize \
+    && ./configure  --enable-openssl  --enable-http2 \
     && make && make install && rm -rf /tmp/swoole*
 
 ADD ./resources/mcrypt-1.0.3.tgz .

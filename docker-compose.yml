@@ -13,7 +13,7 @@ services:
     - ${PHP_CONFIG}/php.ini:/usr/local/etc/php/php.ini
     - ${PHP_CONFIG}/php-fpm.conf:/usr/local/etc/php-fpm.conf
     - ${PHP_CONFIG}/php-fpm.d:/usr/local/etc/php-fpm.d
-    - ${LOG}/php/error.log:/usr/local/php/log/error.log
+    - ${LOG}/php:/usr/local/php/log
     environment:
       TZ: "${TZ}"
     ports:
@@ -60,6 +60,22 @@ services:
       --collation-server=utf8mb4_unicode_ci
       --default-authentication-plugin=mysql_native_password
       --max_connections=1000
+    networks:
+      - static-network
+
+  redis:
+    image: ${REDIS_VERSION}
+    container_name: db-redis
+    environment:
+      TZ: "${TZ}"
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ${REDIS_CONFIG}/redis.conf:/usr/local/etc/redis/redis.conf     # redis 配置
+      - ${REDIS_DATA}:/data   # redis 数据
+    command:
+      redis-server /usr/local/etc/redis/redis.conf --appendonly yes
     networks:
       - static-network
 

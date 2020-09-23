@@ -1,9 +1,8 @@
 ARG PHP_VERSION
-FROM php:${PHP_VERSION}-fpm
+FROM php:${PHP_VERSION}
 
 # 替换源来加速
 COPY ./resources/sources.list /etc/apt/
-
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
@@ -12,7 +11,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && apt-get install -y --no-install-recommends apt-utils \
     && apt-get install -qq git curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev libzip-dev unzip openssl libssl-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/  --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install pdo_mysql zip gd opcache bcmath pcntl sockets mysqli
+    && docker-php-ext-install pdo_mysql zip gd bcmath pcntl sockets mysqli
 
 WORKDIR /tmp
 

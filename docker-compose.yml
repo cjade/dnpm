@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        PHP_VERSION: 7.1
+        PHP_VERSION: 7.1-fpm
     container_name: php71
     restart: always
     working_dir: /usr/websites
